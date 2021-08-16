@@ -12,6 +12,12 @@
 #include <new>
 #include <string.h>
 
+#ifndef _WIN32
+#define strcpy_s strcpy
+#define sprintf_s sprintf
+#define vsprintf_s vsprintf
+#endif
+
 namespace lua_tinker
 {
 	// init LuaTinker
@@ -310,6 +316,11 @@ namespace lua_tinker
 	
 	template<>	void	pop(lua_State *L);
 	template<>	table	pop(lua_State *L);
+
+	// class helper
+	int meta_get(lua_State *L);
+	int meta_set(lua_State *L);
+	void push_meta(lua_State *L, const char* name);
 
 	// functor (with return value)
 	template<typename RVal, typename T1=void, typename T2=void, typename T3=void, typename T4=void, typename T5=void>
@@ -804,11 +815,6 @@ namespace lua_tinker
 		lua_remove(L, errfunc);
 		return pop<RVal>(L);
 	}
-
-	// class helper
-	int meta_get(lua_State *L);
-	int meta_set(lua_State *L);
-	void push_meta(lua_State *L, const char* name);
 
 	// class init
 	template<typename T>
